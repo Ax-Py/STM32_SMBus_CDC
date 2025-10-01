@@ -34,3 +34,22 @@ A Python driver is also included that allows easy readings of the most common I2
 <br>
 
 8. If the verification passes, break all connections from the STM32 to the ST-Link and unplug the STM32 from the PC. Plug it back into the PC and a COM port called "USB Serial Device" with a VID of 0xC0C0 and a PID of 0x0011 should appear. You can then communicate using any serial terminal program or the included Python driver.
+
+# Reading Data
+
+1. After opening a serial terminal connection, commands are sent to the STM32 with the following format:
+   
+<br>
+<p align="center">
+<img width="782" height="246" alt="image" src="https://github.com/user-attachments/assets/e478104a-ae8f-42b1-8553-867a3e0e744d" />
+
+</p>
+<br>
+
+2. The data returned from the STM32 always starts with the address of the slave device followed by a colon (':') as a delimiter. The characters after the colon are the data that was read back from that slave device. If a PEC byte was requested, the returned data will have another delimiter in the form of a pipe character ('|') that follows the main data packet. The characters after pipe are the PEC byte. A newline character terminates all data returned from the STM32.
+   
+3. As an example, reading the temperature (two bytes from register 0x00) from a TMP117 Digital Temperature Sensor with an address of 0x48:
+
+  -> Data written to STM32: 48@00R02#
+
+  -> Data returned from STM32: 48:04$32$\n
